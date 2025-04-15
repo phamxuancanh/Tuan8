@@ -2,6 +2,8 @@
 
 const express = require('express');
 const { 
+  apiTestCircuitBreaker,
+  retry,
   createProduct, 
   getAllProducts, 
   getProductById, 
@@ -13,6 +15,8 @@ const router = express.Router();
 
 // Tạo mới một sản phẩm
 router.post('/products', createProduct);
+router.get('/products/apiTestCircuitBreaker', apiTestCircuitBreaker)
+router.get('/products/retry', retry)
 
 // Lấy tất cả sản phẩm
 router.get('/products', getAllProducts);

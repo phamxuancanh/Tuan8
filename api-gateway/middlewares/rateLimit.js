@@ -45,3 +45,30 @@
 // }
 
 // module.exports = rateLimitAndTimeout;
+const requestCounts = {};
+const interval = 60 * 1000; // 1 phút
+
+// Reset lại số lượng yêu cầu mỗi phút
+setInterval(() => {
+  for (const ip in requestCounts) {
+    requestCounts[ip] = 0;
+  }
+}, interval);
+
+function rateLimiter(rateLimit) {
+  return (req, res, next) => {
+    const ip = req.ip;
+    requestCounts[ip] = (requestCounts[ip] || 0) + 1;
+
+    if (requestCounts[ip] > rateLimit) {
+      return res.status(429).json({
+        code: 429,
+        message: 'Rate limit exceeded. Please try again later.',
+      });
+    }
+
+    next();
+  };
+}
+
+module.exports = rateLimiter;
